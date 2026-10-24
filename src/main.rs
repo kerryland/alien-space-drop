@@ -61,6 +61,25 @@ struct Vertex {
     uv: [f32; 2],
 }
 
+/// Called once the first frame has been drawn so the page can remove its
+/// "LOADING" overlay. On the web build this is backed by `env.alien_ready` in
+/// `web/gl.js`; on desktop it's a no-op.
+#[cfg(target_arch = "wasm32")]
+mod wasm_bridge {
+    #[link(wasm_import_module = "env")]
+    extern "C" {
+        fn alien_ready();
+    }
+    pub fn first_frame_drawn() {
+        unsafe { alien_ready(); }
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+mod wasm_bridge {
+    pub fn first_frame_drawn() {}
+}
+
 struct Stage {
     ctx: Box<dyn RenderingBackend>,
     pipeline: Pipeline,
@@ -70,6 +89,7 @@ struct Stage {
     pressed: HashSet<KeyCode>,
     texture: Option<TextureId>,
     last_time: f64,
+    first_frame: bool,
 }
 
 impl Stage {
@@ -117,11 +137,13 @@ impl Stage {
             pipeline,
             index_buffer,
             game,
-            audio: audio::init(),
+audio: audio::init(),
             pressed: HashSet::new(),
             texture: None,
             last_time: now,
-        }
+            first_frame: false,
+        };
+    }
     }
 
     fn play_sfx(&self, sfx: Sfx) {
@@ -181,6 +203,12 @@ impl EventHandler for Stage {
     }
 
     fn draw(&mut self) {
+        // Once the first frame lands, the page's "LOADING" overlay can go away.
+        if !self.first_frame {
+            self.first_frame = true;
+            wasm_bridge::first_frame_drawn();
+        }
+
         self.ctx
             .begin_default_pass(PassAction::clear_color(0.0, 0.0, 0.0, 1.0));
 

@@ -11,7 +11,7 @@ the pad, the more points.
 
 - **Windows desktop** — `dist/alien-space-drop.exe` (standalone, no install).
 - **Web (GitHub Pages)** — deploy the included GitHub Action, then open:
-  `https://<your-username>.github.io/<repo-name>/`
+  `https://kerryland.github.io/alien-space-drop/`
 
   One-time setup: repo **Settings → Pages → Build and deployment → Source:
   GitHub Actions**. Every push to `main` rebuilds the wasm and redeploys.

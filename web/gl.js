@@ -668,6 +668,14 @@ var importObject = {
                 }
             };
         })(),
+        // ALIEN SPACE DROP: hide the page's LOADING overlay once the wasm has
+        // drawn its first real frame (imported as env.alien_ready by main.rs).
+        alien_ready: function () {
+            var el = document.getElementById("loading");
+            if (el) el.style.display = "none";
+            var cv = document.getElementById("glcanvas");
+            if (cv && document.activeElement !== cv) cv.focus();
+        },
         set_emscripten_shader_hack: function (flag) {
             emscripten_shaders_hack = flag;
         },

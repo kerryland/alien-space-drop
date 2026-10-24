@@ -137,13 +137,12 @@ impl Stage {
             pipeline,
             index_buffer,
             game,
-audio: audio::init(),
+            audio: audio::init(),
             pressed: HashSet::new(),
             texture: None,
             last_time: now,
             first_frame: false,
-        };
-    }
+        }
     }
 
     fn play_sfx(&self, sfx: Sfx) {

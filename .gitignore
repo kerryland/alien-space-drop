@@ -1,0 +1,8 @@
+/target/
+/dist/
+/site/
+/web/alien_space_drop.wasm
+*.png
+*.swp
+.DS_Store
+Thumbs.db

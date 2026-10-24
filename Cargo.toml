@@ -1,0 +1,24 @@
+[package]
+name = "alien-space-drop"
+version = "0.1.0"
+edition = "2021"
+description = "Alien Space Drop: a 1980s Apple II hi-res style arcade game, built with Rust + miniquad."
+
+[dependencies]
+miniquad = "0.4"
+
+# Native-only dependencies: cpal (desktop audio) and png (headless screenshot
+# tool). The web build (wasm32-unknown-unknown) uses a tiny WebAudio bridge
+# declared directly as wasm env imports, so it needs neither of these.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+cpal = "0.17"
+png = "0.17"
+
+# Small wasm binaries; panic=abort is required-ish on wasm32 and fine on the
+# desktop build for an arcade game.
+[profile.release]
+opt-level = "s"
+lto = true
+panic = "abort"
+codegen-units = 1
+strip = true
